@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>添加费用记录</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_expense') }}">
+                    <div class="mb-3">
+                        <label for="description" class="form-label">费用描述</label>
+                        <input type="text" class="form-control" id="description" name="description" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">金额</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="amount" name="amount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">分类</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="" selected disabled>请选择费用分类</option>
+                            <option value="租金">租金</option>
+                            <option value="水电费">水电费</option>
+                            <option value="员工工资">员工工资</option>
+                            <option value="办公用品">办公用品</option>
+                            <option value="运输费">运输费</option>
+                            <option value="维修费">维修费</option>
+                            <option value="广告费">广告费</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('expense_list') }}" class="btn btn-secondary">取消</a>
+                        <button type="submit" class="btn btn-primary">添加费用</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

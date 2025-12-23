@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>添加销售记录</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_sale') }}">
+                    <div class="mb-3">
+                        <label for="product_id" class="form-label">选择商品</label>
+                        <select class="form-select" id="product_id" name="product_id" required>
+                            <option value="" selected disabled>请选择商品</option>
+                            {% for product in products %}
+                                {% set stock = product.inventory.quantity if product.inventory else 0 %}
+                                <option value="{{ product.id }}">
+                                    {{ product.name }} (¥{{ product.price }}) - 库存: {{ stock }}
+                                    {% if stock < 10 %}
+                                        <span class="text-danger">(低库存)</span>
+                                    {% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">销售数量</label>
+                        <input type="number" min="1" class="form-control" id="quantity" name="quantity" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('sale_list') }}" class="btn btn-secondary">取消</a>
+                        <button type="submit" class="btn btn-primary">添加销售</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

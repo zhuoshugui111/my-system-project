@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>添加采购记录</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_purchase') }}">
+                    <div class="mb-3">
+                        <label for="product_id" class="form-label">选择商品</label>
+                        <select class="form-select" id="product_id" name="product_id" required>
+                            <option value="" selected disabled>请选择商品</option>
+                            {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }} (¥{{ product.cost_price }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="supplier_id" class="form-label">选择供应商</label>
+                        <select class="form-select" id="supplier_id" name="supplier_id" required>
+                            <option value="" selected disabled>请选择供应商</option>
+                            {% for supplier in suppliers %}
+                                <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">采购数量</label>
+                        <input type="number" min="1" class="form-control" id="quantity" name="quantity" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('purchase_list') }}" class="btn btn-secondary">取消</a>
+                        <button type="submit" class="btn btn-primary">添加采购</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

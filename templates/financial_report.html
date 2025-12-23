@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">财务报表</h2>
+        
+        <!-- 标签页导航 -->
+        <ul class="nav nav-tabs mb-4" id="financialReportTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="profit-tab" data-bs-toggle="tab" data-bs-target="#profit" type="button" role="tab" aria-controls="profit" aria-selected="true">利润表</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cashflow-tab" data-bs-toggle="tab" data-bs-target="#cashflow" type="button" role="tab" aria-controls="cashflow" aria-selected="false">现金流量表</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="balance-tab" data-bs-toggle="tab" data-bs-target="#balance" type="button" role="tab" aria-controls="balance" aria-selected="false">资产负债表</button>
+            </li>
+        </ul>
+        
+        <!-- 标签页内容 -->
+        <div class="tab-content" id="financialReportTabsContent">
+            <!-- 利润表 -->
+            <div class="tab-pane fade show active" id="profit" role="tabpanel" aria-labelledby="profit-tab">
+                <div class="card mb-5">
+                    <div class="card-header">
+                        <h3>本月利润表</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card text-white bg-success mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">营业收入</h5>
+                                        <p class="card-text display-4">¥{{ "%.2f"|format(month_sales) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-primary mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">其他收入</h5>
+                                        <p class="card-text display-4">¥{{ "%.2f"|format(month_other_income) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-danger mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">营业成本</h5>
+                                        <p class="card-text display-4">¥{{ "%.2f"|format(month_purchase_cost) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-warning mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">净利润</h5>
+                                        <p class="card-text display-4">¥{{ "%.2f"|format(month_profit) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">运营费用</h5>
+                                        <p class="card-text display-4">¥{{ "%.2f"|format(month_expenses) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 费用分类统计 -->
+                <div class="card mb-5">
+                    <div class="card-header">
+                        <h3>费用分类明细</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if expense_categories %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>费用类别</th>
+                                    <th>金额 (¥)</th>
+                                    <th>占比</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for expense in expense_categories %}
+                                <tr>
+                                    <td>{{ expense.category }}</td>
+                                    <td>{{ "%.2f"|format(expense.total_amount) }}</td>
+                                    <td>{{ "%.1f%%"|format((expense.total_amount / month_expenses) * 100 if month_expenses > 0 else 0) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-info">
+                            <p class="mb-0">本月没有费用记录</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- 收入分类统计 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>其他收入明细</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if income_categories %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>收入类别</th>
+                                    <th>金额 (¥)</th>
+                                    <th>占比</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for income in income_categories %}
+                                <tr>
+                                    <td>{{ income.category }}</td>
+                                    <td>{{ "%.2f"|format(income.total_amount) }}</td>
+                                    <td>{{ "%.1f%%"|format((income.total_amount / month_other_income) * 100 if month_other_income > 0 else 0) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-info">
+                            <p class="mb-0">本月没有其他收入记录</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 现金流量表 -->
+            <div class="tab-pane fade" id="cashflow" role="tabpanel" aria-labelledby="cashflow-tab">
+                <div class="card mb-5">
+                    <div class="card-header">
+                        <h3>本月现金流量表</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card text-white bg-success mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">经营活动现金流入</h5>
+                                        <p class="card-text display-4">¥{{ "%.2f"|format(operating_cash_in) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-white bg-danger mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">经营活动现金流出</h5>
+                                        <p class="card-text display-4">¥{{ "%.2f"|format(operating_cash_out) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-white bg-info mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">净现金流量</h5>
+                                        <p class="card-text display-4">¥{{ "%.2f"|format(net_cash_flow) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>现金流量明细</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>项目</th>
+                                                    <th>金额 (¥)</th>
+                                                    <th>类型</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>销售商品、提供劳务收到的现金</td>
+                                                    <td class="text-success">+{{ "%.2f"|format(month_sales) }}</td>
+                                                    <td>经营活动流入</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>收到的其他与经营活动有关的现金</td>
+                                                    <td class="text-success">+{{ "%.2f"|format(month_other_income) }}</td>
+                                                    <td>经营活动流入</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>购买商品、接受劳务支付的现金</td>
+                                                    <td class="text-danger">-{{ "%.2f"|format(month_purchase_cost) }}</td>
+                                                    <td>经营活动流出</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>支付的其他与经营活动有关的现金</td>
+                                                    <td class="text-danger">-{{ "%.2f"|format(month_expenses) }}</td>
+                                                    <td>经营活动流出</td>
+                                                </tr>
+                                                <tr class="table-primary">
+                                                    <td><strong>经营活动产生的现金流量净额</strong></td>
+                                                    <td><strong>{{ "%.2f"|format(net_cash_flow) }}</strong></td>
+                                                    <td><strong>净流量</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 资产负债表 -->
+            <div class="tab-pane fade" id="balance" role="tabpanel" aria-labelledby="balance-tab">
+                <div class="card mb-5">
+                    <div class="card-header">
+                        <h3>资产负债表</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5>资产</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>资产项目</th>
+                                                    <th>金额 (¥)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>库存商品</td>
+                                                    <td>{{ "%.2f"|format(total_inventory_value) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>未分配利润</td>
+                                                    <td>{{ "%.2f"|format(month_profit) }}</td>
+                                                </tr>
+                                                <tr class="table-primary">
+                                                    <td><strong>总资产</strong></td>
+                                                    <td><strong>{{ "%.2f"|format(total_assets) }}</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-success text-white">
+                                        <h5>负债和所有者权益</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>项目</th>
+                                                    <th>金额 (¥)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>流动负债</td>
+                                                    <td>{{ "%.2f"|format(total_liabilities) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>所有者权益</td>
+                                                    <td>{{ "%.2f"|format(total_equity) }}</td>
+                                                </tr>
+                                                <tr class="table-primary">
+                                                    <td><strong>负债和所有者权益总计</strong></td>
+                                                    <td><strong>{{ "%.2f"|format(total_liabilities + total_equity) }}</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="alert alert-info">
+                                    <p class="mb-0"><strong>会计恒等式验证：</strong>资产 = 负债 + 所有者权益</p>
+                                    <p class="mb-0">¥{{ "%.2f"|format(total_assets) }} = ¥{{ "%.2f"|format(total_liabilities) }} + ¥{{ "%.2f"|format(total_equity) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>更新商品信息</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('update_product', product_id=product.id) }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">商品名称</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">分类</label>
+                        <input type="text" class="form-control" id="category" name="category" value="{{ product.category }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">销售价格</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" value="{{ product.price }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cost_price" class="form-label">成本价格</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="cost_price" name="cost_price" value="{{ product.cost_price }}" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('product_list') }}" class="btn btn-secondary">取消</a>
+                        <button type="submit" class="btn btn-primary">更新商品</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

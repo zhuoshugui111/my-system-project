@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">欢迎使用超市财务管理系统</h2>
+        <p>这是一个功能完整的超市财务管理系统，您可以在这里管理商品、供应商、采购、销售和财务数据。</p>
+        
+        <!-- 系统概览卡片 -->
+        <div class="row mt-5">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">商品总数</h5>
+                        <p class="card-text display-4">{{ product_count }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">今日销售</h5>
+                        <p class="card-text display-4">¥{{ today_sales }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">本月利润</h5>
+                        <p class="card-text display-4">¥{{ month_profit }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">低库存商品</h5>
+                        <p class="card-text display-4">{{ low_stock_count }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 快速操作按钮 -->
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h3>快速操作</h3>
+                <div class="btn-group mt-2" role="group" aria-label="快速操作按钮">
+                    <a href="{{ url_for('add_product') }}" class="btn btn-primary">添加商品</a>
+                    <a href="{{ url_for('add_purchase') }}" class="btn btn-primary">添加采购</a>
+                    <a href="{{ url_for('add_sale') }}" class="btn btn-primary">添加销售</a>
+                    <a href="{{ url_for('add_expense') }}" class="btn btn-primary">添加费用</a>
+                    <a href="{{ url_for('add_income') }}" class="btn btn-primary">添加收入</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

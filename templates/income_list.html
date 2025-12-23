@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">收入管理</h2>
+        <a href="{{ url_for('add_income') }}" class="btn btn-primary mb-3">添加收入</a>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>收入描述</th>
+                        <th>金额</th>
+                        <th>分类</th>
+                        <th>收入日期</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for income in incomes %}
+                    <tr>
+                        <td>{{ income.description }}</td>
+                        <td>¥{{ income.amount }}</td>
+                        <td>{{ income.category }}</td>
+                        <td>{{ income.income_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_income', income_id=income.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定要删除该收入记录吗？')">删除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

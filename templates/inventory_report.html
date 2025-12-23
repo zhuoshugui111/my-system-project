@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">库存报表</h2>
+        
+        <!-- 库存概览 -->
+        <div class="card mb-5">
+            <div class="card-header">
+                <h3>库存概览</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">总库存价值</h4>
+                            <p class="display-4">¥{{ "%.2f"|format(total_inventory_value) }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-warning">
+                            <h4 class="alert-heading">低库存商品数量</h4>
+                            <p class="display-4">{{ low_stock_items|length }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 按类别统计 -->
+        <div class="card mb-5">
+            <div class="card-header">
+                <h3>按类别统计库存</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>类别</th>
+                            <th>库存数量</th>
+                            <th>库存价值 (¥)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in category_inventory %}
+                        <tr>
+                            <td>{{ category.category }}</td>
+                            <td>{{ category.total_quantity }}</td>
+                            <td>{{ "%.2f"|format(category.total_value) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 低库存商品 -->
+        <div class="card mb-5">
+            <div class="card-header">
+                <h3 class="text-danger">低库存商品（库存<10）</h3>
+            </div>
+            <div class="card-body">
+                {% if low_stock_items %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>类别</th>
+                            <th>库存数量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in low_stock_items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.quantity }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-success">
+                    <p class="mb-0">没有低库存商品</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- 所有商品库存 -->
+        <div class="card">
+            <div class="card-header">
+                <h3>所有商品库存</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>类别</th>
+                            <th>库存数量</th>
+                            <th>单价 (¥)</th>
+                            <th>库存价值 (¥)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in inventory_items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ "%.2f"|format(item.price) }}</td>
+                            <td>{{ "%.2f"|format(item.price * item.quantity) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

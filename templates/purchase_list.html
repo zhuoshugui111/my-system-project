@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">采购管理</h2>
+        <a href="{{ url_for('add_purchase') }}" class="btn btn-primary mb-3">添加采购</a>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>商品名称</th>
+                        <th>供应商</th>
+                        <th>采购数量</th>
+                        <th>成本单价</th>
+                        <th>总成本</th>
+                        <th>采购日期</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in purchases %}
+                    <tr>
+                        <td>{{ purchase.product.name }}</td>
+                        <td>{{ purchase.supplier.name }}</td>
+                        <td>{{ purchase.quantity }}</td>
+                        <td>¥{{ purchase.product.cost_price }}</td>
+                        <td>¥{{ purchase.total_cost }}</td>
+                        <td>{{ purchase.purchase_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_purchase', purchase_id=purchase.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定要删除该采购记录吗？')">删除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

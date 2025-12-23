@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">销售管理</h2>
+        <a href="{{ url_for('add_sale') }}" class="btn btn-primary mb-3">添加销售</a>
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>商品名称</th>
+                        <th>销售数量</th>
+                        <th>销售单价</th>
+                        <th>销售金额</th>
+                        <th>销售日期</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale.product.name }}</td>
+                        <td>{{ sale.quantity }}</td>
+                        <td>¥{{ sale.product.price }}</td>
+                        <td>¥{{ sale.total_amount }}</td>
+                        <td>{{ sale.sale_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_sale', sale_id=sale.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定要删除该销售记录吗？')">删除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
